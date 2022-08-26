@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
-
 @RestController
 @RequestMapping("/api/stock")
 public class StockController {
@@ -16,11 +15,12 @@ public class StockController {
     @Autowired
     private StockRepository stockRepository;
 
-    public boolean stockDisponible(@PathVariable String code) {
+    @RequestMapping("/{code}")
+    public boolean stockAvailable(@PathVariable String code) {
         Optional<StockEntity> stock = stockRepository.findByCode(code);
-        stock.orElseThrow(() -> new RuntimeException("No se encuentra el producto" + code));
+
+        stock.orElseThrow(() -> new RuntimeException("Cannot find the product " + code));
 
         return stock.get().getQuantity() > 0;
-
     }
 }
